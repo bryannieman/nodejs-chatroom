@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<title>正能樣</title>
+<style type="text/css">
+	* {
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+		  box-sizing: border-box;
+	}
+
+	.container { position:relative; width:100%;  }
+	.top { position:relative; width:100%;}
+	.bottom { positive:relative;  width:100%;  }
+	.red   { color: red; }
+	.black { color: black; }
+	.nickname {  border: none; padding: 1%; width: 18%; margin-right: 0%; background: #d6adff;  }
+	.messagebox { border: none; padding: 1%; width: 58%; margin-right: 0%; background: #ffffcc; }
+	.sendbtn {  border: none; padding: 1%; width: 18%; margin-right: 0%; background: rgb(130, 224, 255);  }
+	#messages { list-style-type: none; margin-bottom: 0px; padding: 0; }
+	#messages li { padding: 2px 0px 2px 0px; }
+	#messages li:nth-child(odd) { background: #eee; }
+	
+	@-webkit-keyframes hvr-ripple-out {
+	  100% {
+	    top: -12px;
+	    right: -12px;
+	    bottom: -12px;
+	    left: -12px;
+	    opacity: 0;
+	  }
+	}
+
+	@keyframes hvr-ripple-out {
+	  100% {
+	    top: -12px;
+	    right: -12px;
+	    bottom: -12px;
+	    left: -12px;
+	    opacity: 0;
+	  }
+	}
+
+	.hvr-ripple-out {
+	  display: inline-block;
+	  vertical-align: middle;
+	  -webkit-transform: translateZ(0);
+	  transform: translateZ(0);
+	  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	  -webkit-backface-visibility: hidden;
+	  backface-visibility: hidden;
+	  -moz-osx-font-smoothing: grayscale;
+	  position: relative;
+	}
+	.hvr-ripple-out:before {
+	  content: '';
+	  position: absolute;
+	  border: rgb(130, 224, 255) solid 6px;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  left: 0;
+	  -webkit-animation-duration: 1s;
+	  animation-duration: 1s;
+	}
+	.hvr-ripple-out:hover:before, .hvr-ripple-out:focus:before, .hvr-ripple-out:active:before {
+	  -webkit-animation-name: hvr-ripple-out;
+	  animation-name: hvr-ripple-out;
+	}
+</style>
+</head>
+<body>
+<div class="container">
+	<div class = "top">
+		<form action="">
+		<input id="nick" class="nickname" placeholder="Your Name" />
+		<input id="m" class="messagebox" autocomplete="off" placeholder="Message..." />
+		<button class="sendbtn hvr-ripple-out">Send</button>
+		</form>
+	</div>
+	<div class = "bottom">
+		<ul id="messages"></ul>
+	</div>
+</div>
+
+<script type="text/javascript" src="public/socket.io-1.2.0.js"></script>
+<script type="text/javascript" src="public/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="public/jquery.titlealert.min.js"></script>
+
+<script>
+  var socket = io();
+  $('form').submit(function(){
+    socket.emit('chat message', '[' + $('#nick').val() + ']: ' +  $('#m').val());
+    $('#m').val('');
+    return false;
+  });
+
+  socket.on('chat message', function(msg){
+    $('#messages').prepend($('<li>').addClass('black').text(msg));
+    $.titleAlert(msg, {stopOnFocus:true, interval:900 });
+  });
+  
+  socket.on('status message', function(msg){
+    $('#messages').prepend($('<li>').addClass('red').text(msg));
+  });
+</script>
+</body></html>
