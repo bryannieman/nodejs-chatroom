@@ -1,25 +1,29 @@
 var express = require('express');
 var app = express();
 
-//var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.use('/public', express.static('public'));
 
-var port=8080;
+var port=740;
 
 var remoteip;
 var shortip;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
-  remoteip = req.connection.remoteAddress;
-  var blocks = remoteip.split(".");
-  shortip = blocks[2] + "." + blocks[3] ;
+  //console.log(remoteip);
 });
 
 io.on('connection', function(socket){
+  remoteip = socket.client.conn.remoteAddress;
+  var blocks = remoteip.split(":");
+  shortip = blocks[blocks.length-1];
+  //var blocks = remoteip.split(".");
+  //shortip = blocks[2] + "." + blocks[3] ;
+  //console.log(socket.request);
+  
   io.emit('status message', '[' + shortip + '] connected');
   console.log('[' + remoteip + '] connected');
   

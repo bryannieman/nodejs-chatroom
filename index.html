@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>正能樣</title>
+<title>正能樣製作所</title>
 <style type="text/css">
 	* {
 	  -webkit-box-sizing: border-box;
@@ -40,7 +40,6 @@
 	    opacity: 0;
 	  }
 	}
-
 	.hvr-ripple-out {
 	  display: inline-block;
 	  vertical-align: middle;
@@ -72,7 +71,7 @@
 <body>
 <div class="container">
 	<div class = "top">
-		<form action="">
+		<form id="sendform" action="">
 		<input id="nick" class="nickname" placeholder="Your Name" />
 		<input id="m" class="messagebox" autocomplete="off" placeholder="Message..." />
 		<button class="sendbtn hvr-ripple-out">Send</button>
@@ -89,7 +88,8 @@
 
 <script>
   var socket = io();
-  $('form').submit(function(){
+  //$('form').submit(function(){
+  $('#sendform').submit(function(){
     socket.emit('chat message', '[' + $('#nick').val() + ']: ' +  $('#m').val());
     $('#m').val('');
     return false;
