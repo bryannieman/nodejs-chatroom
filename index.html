@@ -90,17 +90,18 @@
   var socket = io();
   //$('form').submit(function(){
   $('#sendform').submit(function(){
-    socket.emit('chat message', '[' + $('#nick').val() + ']: ' +  $('#m').val());
+    //socket.emit('chat_msg', '[' + $('#nick').val() + ']: ' +  $('#m').val());
+    socket.emit('chat_msg', { nickname : $('#nick').val(), message : $('#m').val() } );
     $('#m').val('');
     return false;
   });
 
-  socket.on('chat message', function(msg){
+  socket.on('chat_msg', function(msg){
     $('#messages').prepend($('<li>').addClass('black').text(msg));
     $.titleAlert(msg, {stopOnFocus:true, interval:900 });
   });
   
-  socket.on('status message', function(msg){
+  socket.on('status_msg', function(msg){
     $('#messages').prepend($('<li>').addClass('red').text(msg));
   });
 </script>
