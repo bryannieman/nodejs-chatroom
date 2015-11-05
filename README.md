@@ -22,3 +22,6 @@ node index
 4. Connect with Client
 
 Client user could connect to the server with http://ip:port
+default port: 7400
+default username: usernamehere
+default password: passwordhere

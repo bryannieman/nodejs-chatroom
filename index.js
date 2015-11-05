@@ -4,16 +4,39 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var basicAuth = require('basic-auth');
+
 app.use('/public', express.static('public'));  //mapping /public folder to the world as /public
 
-var port=740;		//port used for server
+var port=7400;		//port used for server
 
 var remoteip;		//remote IP in full
 var shortip;		//remote IP in short
+var loginname = 'usernamehere';
+var loginpw   = 'passwordhere';
+
+var auth = function (req, res, next) {
+  function unauthorized(res) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    return res.sendStatus(401);
+  };
+
+  var user = basicAuth(req);
+
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  };
+
+  if (user.name === loginname && user.pass === loginpw) {
+    return next();
+  } else {
+    return unauthorized(res);
+  };
+};
 
 
-
-app.get('/', function(req, res){
+//app.get('/', function(req, res){
+app.get('/', auth, function(req, res){
   res.sendFile(__dirname + '/index.html');
   //console.log(remoteip);
 });
